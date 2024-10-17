@@ -1,0 +1,53 @@
+name: CI/CD Pipeline for MERN Restaurant Management App
+
+# Event that triggers the workflow
+on:
+  push:
+    branches:
+      - master  # Trigger on push to master branch
+
+# Define the jobs for the CI/CD pipeline
+jobs:
+  build:
+    runs-on: self-hosted  # Use your self-hosted Windows runner
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3  # Ensure using the latest version
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3  # Ensure using the latest version
+        with:
+          node-version: '20'  # Set Node.js version to 20
+
+      # Step 3: Install backend dependencies
+      - name: Install Backend Dependencies
+        run: |
+          cd src  # Navigate to the src directory for backend
+          npm install
+
+      # Step 4: Install frontend dependencies
+      - name: Install Frontend Dependencies
+        run: |
+          cd public  # Navigate to the public directory for frontend
+          npm install
+
+      # Step 5: Build frontend
+      - name: Build Frontend
+        run: |
+          cd public  # Navigate to the public directory for frontend
+          npm run build
+
+      # Step 6: Run backend tests (optional)
+      - name: Run Backend Tests
+        run: |
+          cd src  # Navigate to the src directory for backend
+          npm test
+
+      # Step 7: Start the application
+      - name: Start Application
+        run: |
+          start cmd /c "cd src && npm start"  # Start backend server in a new command prompt
+          start cmd /c "cd public && npm start"  # Start frontend server in a new command prompt
