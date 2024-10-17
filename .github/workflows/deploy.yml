@@ -1,75 +1,53 @@
 name: CI/CD Pipeline for MERN Restaurant Management App
 
+# Event that triggers the workflow
 on:
   push:
     branches:
-      - main  # Trigger the workflow on push to the main branch
+      - master  # Trigger on push to master branch
 
+# Define the jobs for the CI/CD pipeline
 jobs:
   build:
     runs-on: self-hosted  # Use your self-hosted Windows runner
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Specify your Node.js version
+          node-version: '16'  # Ensure Node.js version matches your app
 
+      # Step 3: Install backend dependencies
       - name: Install Backend Dependencies
         run: |
-          cd backend
+          cd src  # Navigate to the src directory for backend
           npm install
 
+      # Step 4: Install frontend dependencies
       - name: Install Frontend Dependencies
         run: |
-          cd ../frontend
+          cd public  # Navigate to the public directory for frontend
           npm install
 
+      # Step 5: Build frontend
       - name: Build Frontend
         run: |
-          cd frontend
+          cd public  # Navigate to the public directory for frontend
           npm run build
 
+      # Step 6: Run backend tests (optional)
       - name: Run Backend Tests
         run: |
-          cd ../backend
+          cd src  # Navigate to the src directory for backend
           npm test
 
-      - name: Package Application
+      # Step 7: Start the application
+      - name: Start Application
         run: |
-          # Add any packaging steps if necessary
-          echo "Packaging completed."
-
-  deploy:
-    needs: build
-    runs-on: self-hosted  # Use your self-hosted Windows runner
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Deploy Frontend
-        run: |
-          xcopy /E /I /Y ./frontend/build C:\path\to\your\deployment\folder\frontend
-
-      - name: Deploy Backend
-        run: |
-          xcopy /E /I /Y ./backend C:\path\to\your\deployment\folder\backend
-
-      - name: Restart IIS (or Your Web Server)
-        run: |
-          iisreset
-          # If using a different server, replace with appropriate restart commands
-
-
-          on:
-            push:
-              branches:
-                - master
-            pull_request:
-               branches:
-                - master
-
+          start cmd /c "cd src && npm start"  # Start backend server in a new command prompt
+          start cmd /c "cd public && npm start"  # Start frontend server in a new command prompt
