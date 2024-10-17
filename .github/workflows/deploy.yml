@@ -63,3 +63,13 @@ jobs:
         run: |
           iisreset
           # If using a different server, replace with appropriate restart commands
+
+
+          on:
+            push:
+              branches:
+                - master
+            pull_request:
+               branches:
+                - master
+
