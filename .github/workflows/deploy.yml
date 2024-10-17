@@ -1,0 +1,7 @@
+jobs:
+  build:
+    runs-on: self-hosted  # Use the Windows self-hosted runner
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # Add more build steps as necessary
