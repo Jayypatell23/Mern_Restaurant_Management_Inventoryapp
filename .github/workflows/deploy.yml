@@ -14,13 +14,13 @@ jobs:
     steps:
       # Step 1: Checkout the repository
       - name: Checkout Repository
-        uses: actions/checkout@v3  # Update to version 3
+        uses: actions/checkout@v3  # Ensure using the latest version
 
       # Step 2: Set up Node.js environment
       - name: Set up Node.js
-        uses: actions/setup-node@v3  # Ensure you have the latest version
+        uses: actions/setup-node@v3  # Ensure using the latest version
         with:
-          node-version: '20'  # Update Node.js version to 20
+          node-version: '20'  # Set Node.js version to 20
 
       # Step 3: Install backend dependencies
       - name: Install Backend Dependencies
