@@ -1,7 +1,65 @@
+name: CI/CD Pipeline for MERN Restaurant Management App
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on push to the main branch
+
 jobs:
   build:
-    runs-on: self-hosted  # Use the Windows self-hosted runner
+    runs-on: self-hosted  # Use your self-hosted Windows runner
+
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      # Add more build steps as necessary
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Specify your Node.js version
+
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd ../frontend
+          npm install
+
+      - name: Build Frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Run Backend Tests
+        run: |
+          cd ../backend
+          npm test
+
+      - name: Package Application
+        run: |
+          # Add any packaging steps if necessary
+          echo "Packaging completed."
+
+  deploy:
+    needs: build
+    runs-on: self-hosted  # Use your self-hosted Windows runner
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Deploy Frontend
+        run: |
+          xcopy /E /I /Y ./frontend/build C:\path\to\your\deployment\folder\frontend
+
+      - name: Deploy Backend
+        run: |
+          xcopy /E /I /Y ./backend C:\path\to\your\deployment\folder\backend
+
+      - name: Restart IIS (or Your Web Server)
+        run: |
+          iisreset
+          # If using a different server, replace with appropriate restart commands
